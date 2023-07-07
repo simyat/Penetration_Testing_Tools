@@ -1,7 +1,7 @@
 import requests
 import sys
 
-# MySQL Blind SQL Injection Automatic Tool
+# MySQL Blind SQL Injection automation Tools
 def blind_sql_injection_attack():
     URL = input("Enter the target URL for the attack : ")
     query = input("Enter the vulnerabilities detection query (Ex: 'and'1'='1'%23) ")
